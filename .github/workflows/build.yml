@@ -1,10 +1,12 @@
-name: Build and Create Release
+name: Build and Auto Create Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ "main", "master" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -32,11 +34,13 @@ jobs:
       run: |
         Compress-Archive -Path dist/app/* -DestinationPath GearCostPro-Windows.zip
 
-    - name: Create Release and Upload Asset
+    - name: Create or Update Release
       uses: softprops/action-gh-release@v1
       with:
         files: GearCostPro-Windows.zip
-        name: "GearCost Pro Release"
         tag_name: "v1.0.${{ github.run_number }}"
+        name: "GearCost Pro v1.0.${{ github.run_number }}"
+        draft: false
+        prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
