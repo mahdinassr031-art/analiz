@@ -1,8 +1,10 @@
-name: Build Desktop EXE Application
+name: Build and Create Release
 
 on:
   push:
-    branches: [ "main", "master" ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,8 +27,16 @@ jobs:
       run: |
         pyinstaller --noconfirm --onedir --windowed app.py
 
-    - name: Upload EXE Artifact
-      uses: actions/upload-artifact@v4
+    - name: Compress Build to ZIP
+      shell: powershell
+      run: |
+        Compress-Archive -Path dist/app/* -DestinationPath GearCostPro-Windows.zip
+
+    - name: Create Release and Upload Asset
+      uses: softprops/action-gh-release@v1
       with:
-        name: GearCostPro-Windows
-        path: dist/app/
+        files: GearCostPro-Windows.zip
+        name: "GearCost Pro Release"
+        tag_name: "v1.0.${{ github.run_number }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
