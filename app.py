@@ -17,7 +17,8 @@ class GearCostApp:
         style.configure("TButton", font=("Tahoma", 10, "bold"), background="#0e639c", foreground="#ffffff")
         style.map("TButton", background=[("active", "#1177bb")])
 
-        header = tk.Label(root, text="⚙️ GearCost Pro (نسخه دسکتاپ)", font=("Tahoma", 16, "bold"), bg="#252526", fg="#007acc", py=10)
+        # اصلاح خط ۲۰: تغییر py=10 به pady=10
+        header = tk.Label(root, text="⚙️ GearCost Pro (نسخه دسکتاپ)", font=("Tahoma", 16, "bold"), bg="#252526", fg="#007acc", pady=10)
         header.pack(fill="x")
 
         main_frame = ttk.Frame(root, padding="15")
