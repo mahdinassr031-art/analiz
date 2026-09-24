@@ -31,8 +31,8 @@ class TookaTarhCostApp:
         style.configure("Treeview", font=("Tahoma", 8), rowheight=24, background="#ffffff", fieldbackground="#ffffff", foreground="#2c3e50")
         style.configure("Treeview.Heading", font=("Tahoma", 8, "bold"), background="#34495e", foreground="#ffffff")
 
-        # Header Title
-        header_frame = tk.Frame(root, bg="#1a365d", py=12)
+        # Header Title (اصلاح py=12 به pady=12)
+        header_frame = tk.Frame(root, bg="#1a365d", pady=12)
         header_frame.pack(fill="x")
         header = tk.Label(
             header_frame, 
@@ -270,13 +270,12 @@ class TookaTarhCostApp:
             messagebox.showinfo("موفقیت", "فایل اکسل قطعات ذخیره شد.")
 
     # =========================================================
-    # TAB 2: آنالیز گیربکس کامل (مطابق جدول گیربکس اکسل کاوه کیش)
+    # TAB 2: آنالیز گیربکس کامل
     # =========================================================
     def build_gearbox_tab(self):
         gb_frame = ttk.LabelFrame(self.tab_gearbox, text=" ورودی‌های آنالیز تجمیعی گیربکس ", padding="10")
         gb_frame.pack(fill="x", pady=5)
 
-        # Grid inputs
         ttk.Label(gb_frame, text="عنوان گیربکس / پروژه:").grid(row=0, column=0, sticky="w", pady=4)
         self.gb_title_entry = ttk.Entry(gb_frame, width=20)
         self.gb_title_entry.insert(0, "گیربکس کاوه کیش")
@@ -292,7 +291,6 @@ class TookaTarhCostApp:
         self.gb_unit_w_entry.insert(0, "250")
         self.gb_unit_w_entry.grid(row=0, column=5, padx=5, pady=4)
 
-        # Cost Breakdown
         ttk.Label(gb_frame, text="قیمت متریال کل:").grid(row=1, column=0, sticky="w", pady=4)
         self.gb_mat_cost_entry = ttk.Entry(gb_frame, width=20)
         self.gb_mat_cost_entry.insert(0, "3376964387")
@@ -333,12 +331,10 @@ class TookaTarhCostApp:
         self.gb_ship_cost_entry.insert(0, "90000000")
         self.gb_ship_cost_entry.grid(row=3, column=3, padx=5, pady=4)
 
-        # Calculate Button
         btn_calc_gb = ttk.Button(gb_frame, text="🧮 محاسبه آنالیز قیمت گیربکس", command=self.calculate_gearbox)
         btn_calc_gb.grid(row=3, column=4, columnspan=2, sticky="ew", padx=5, pady=4)
 
-        # Output Summary Card
-        res_frame = ttk.LabelFrame(self.tab_gearbox, text=" نتایج محاسباتی گیربکس (بر اساس وزن و سود) ", padding="15")
+        res_frame = ttk.LabelFrame(self.tab_gearbox, text=" نتایج محاسباتی گیربکس ", padding="15")
         res_frame.pack(fill="x", pady=10)
 
         self.gb_res_total_weight = tk.Label(res_frame, text="وزن کل قطعات: ۰ کیلوگرم", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
@@ -347,7 +343,7 @@ class TookaTarhCostApp:
         self.gb_res_make_cost = tk.Label(res_frame, text="قیمت ساخت کل: ۰ ریال", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
         self.gb_res_make_cost.grid(row=0, column=1, padx=20, pady=5, sticky="w")
 
-        self.gb_res_final_set = tk.Label(res_frame, text="قیمت هر ست با ۳۰٪ سود: ۰ ریال", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#16a085")
+        self.gb_res_final_set = tk.Label(res_frame, text="قیمت کل پروژه با ۳۰٪ سود: ۰ ریال", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#16a085")
         self.gb_res_final_set.grid(row=1, column=0, padx=20, pady=5, sticky="w")
 
         self.gb_res_per_kg = tk.Label(res_frame, text="قیمت هر کیلوگرم گیربکس: ۰ ریال", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#2980b9")
