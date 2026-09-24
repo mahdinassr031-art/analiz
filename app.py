@@ -6,7 +6,7 @@ import openpyxl
 class TookaTarhCostApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("آنالیز متریال دنده و گیربکس جهت شرکت توکا طرح سپاهان")
+        self.root.title("آنالیز متریال دنده و گیربکس جهت شرکت توکا طرح صفاهان")
         self.root.geometry("1300x850")
         self.root.configure(bg="#f4f6f9")
 
@@ -31,12 +31,12 @@ class TookaTarhCostApp:
         style.configure("Treeview", font=("Tahoma", 8), rowheight=24, background="#ffffff", fieldbackground="#ffffff", foreground="#2c3e50")
         style.configure("Treeview.Heading", font=("Tahoma", 8, "bold"), background="#34495e", foreground="#ffffff")
 
-        # Header Title (اصلاح py=12 به pady=12)
+        # Header Title
         header_frame = tk.Frame(root, bg="#1a365d", pady=12)
         header_frame.pack(fill="x")
         header = tk.Label(
             header_frame, 
-            text="⚙️ آنالیز متریال دنده و گیربکس جهت شرکت توکا طرح سپاهان", 
+            text="⚙️ آنالیز متریال دنده و گیربکس جهت شرکت توکا طرح صفاهان", 
             font=("Tahoma", 14, "bold"), 
             bg="#1a365d", 
             fg="#ffffff"
@@ -46,7 +46,7 @@ class TookaTarhCostApp:
         main_frame = ttk.Frame(root, padding="10")
         main_frame.pack(fill="both", expand=True)
 
-        # Tab Navigation (قسمت تفکیک قطعات و گیربکس)
+        # Tab Navigation
         self.notebook = ttk.Notebook(main_frame)
         self.notebook.pack(fill="both", expand=True)
 
@@ -54,8 +54,8 @@ class TookaTarhCostApp:
         self.tab_parts = ttk.Frame(self.notebook, padding="10")
         self.tab_gearbox = ttk.Frame(self.notebook, padding="10")
 
-        self.notebook.add(self.tab_parts, text=" ⚙️ ۱. آنالیز قطعات و متعلقات (Component Level) ")
-        self.notebook.add(self.tab_gearbox, text=" 📦 ۲. آنالیز گیربکس کامل (Gearbox Assembly) ")
+        self.notebook.add(self.tab_parts, text=" ⚙️ ۱. آنالیز قطعات و متعلقات ")
+        self.notebook.add(self.tab_gearbox, text=" 📦 ۲. آنالیز گیربکس کامل (بر اساس نرخ کیلوگرمی) ")
 
         # Build Content for Both Tabs
         self.build_parts_tab()
@@ -270,15 +270,15 @@ class TookaTarhCostApp:
             messagebox.showinfo("موفقیت", "فایل اکسل قطعات ذخیره شد.")
 
     # =========================================================
-    # TAB 2: آنالیز گیربکس کامل
+    # TAB 2: آنالیز گیربکس کامل (محاسبات پویا بر اساس تغییر وزن)
     # =========================================================
     def build_gearbox_tab(self):
-        gb_frame = ttk.LabelFrame(self.tab_gearbox, text=" ورودی‌های آنالیز تجمیعی گیربکس ", padding="10")
+        gb_frame = ttk.LabelFrame(self.tab_gearbox, text=" ورودی‌های آنالیز گیربکس (نرخ‌ها به ازای هر کیلوگرم/واحد) ", padding="10")
         gb_frame.pack(fill="x", pady=5)
 
-        ttk.Label(gb_frame, text="عنوان گیربکس / پروژه:").grid(row=0, column=0, sticky="w", pady=4)
+        ttk.Label(gb_frame, text="عنوان پروژه:").grid(row=0, column=0, sticky="w", pady=4)
         self.gb_title_entry = ttk.Entry(gb_frame, width=20)
-        self.gb_title_entry.insert(0, "گیربکس کاوه کیش")
+        self.gb_title_entry.insert(0, "گیربکس توکا طرح صفاهان")
         self.gb_title_entry.grid(row=0, column=1, padx=5, pady=4)
 
         ttk.Label(gb_frame, text="تعداد گیربکس:").grid(row=0, column=2, sticky="w", pady=4)
@@ -286,55 +286,56 @@ class TookaTarhCostApp:
         self.gb_qty_entry.insert(0, "18")
         self.gb_qty_entry.grid(row=0, column=3, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="وزن هر گیربکس (kg):").grid(row=0, column=4, sticky="w", pady=4)
-        self.gb_unit_w_entry = ttk.Entry(gb_frame, width=10)
+        ttk.Label(gb_frame, text="وزن واحد هر گیربکس (kg):").grid(row=0, column=4, sticky="w", pady=4)
+        self.gb_unit_w_entry = ttk.Entry(gb_frame, width=12)
         self.gb_unit_w_entry.insert(0, "250")
         self.gb_unit_w_entry.grid(row=0, column=5, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="قیمت متریال کل:").grid(row=1, column=0, sticky="w", pady=4)
-        self.gb_mat_cost_entry = ttk.Entry(gb_frame, width=20)
-        self.gb_mat_cost_entry.insert(0, "3376964387")
-        self.gb_mat_cost_entry.grid(row=1, column=1, padx=5, pady=4)
+        # Rates per kg or unit weight
+        ttk.Label(gb_frame, text="نرخ متریال (ریال/کیلو):").grid(row=1, column=0, sticky="w", pady=4)
+        self.gb_mat_rate_entry = ttk.Entry(gb_frame, width=20)
+        self.gb_mat_rate_entry.insert(0, "750000")
+        self.gb_mat_rate_entry.grid(row=1, column=1, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="قیمت تراشکاری کل:").grid(row=1, column=2, sticky="w", pady=4)
-        self.gb_turn_cost_entry = ttk.Entry(gb_frame, width=10)
-        self.gb_turn_cost_entry.insert(0, "3765494357")
-        self.gb_turn_cost_entry.grid(row=1, column=3, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ تراشکاری (ریال/کیلو):").grid(row=1, column=2, sticky="w", pady=4)
+        self.gb_turn_rate_entry = ttk.Entry(gb_frame, width=10)
+        self.gb_turn_rate_entry.insert(0, "835000")
+        self.gb_turn_rate_entry.grid(row=1, column=3, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="عملیات حرارتی کل:").grid(row=1, column=4, sticky="w", pady=4)
-        self.gb_heat_cost_entry = ttk.Entry(gb_frame, width=10)
-        self.gb_heat_cost_entry.insert(0, "55903932")
-        self.gb_heat_cost_entry.grid(row=1, column=5, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ عملیات حرارتی (ریال/کیلو):").grid(row=1, column=4, sticky="w", pady=4)
+        self.gb_heat_rate_entry = ttk.Entry(gb_frame, width=12)
+        self.gb_heat_rate_entry.insert(0, "12500")
+        self.gb_heat_rate_entry.grid(row=1, column=5, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="قیمت قطعات استاندارد:").grid(row=2, column=0, sticky="w", pady=4)
-        self.gb_std_cost_entry = ttk.Entry(gb_frame, width=20)
-        self.gb_std_cost_entry.insert(0, "1200000000")
-        self.gb_std_cost_entry.grid(row=2, column=1, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ قطعات استاندارد (ریال/کیلو):").grid(row=2, column=0, sticky="w", pady=4)
+        self.gb_std_rate_entry = ttk.Entry(gb_frame, width=20)
+        self.gb_std_rate_entry.insert(0, "266000")
+        self.gb_std_rate_entry.grid(row=2, column=1, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="جوش و مونتاژ:").grid(row=2, column=2, sticky="w", pady=4)
-        self.gb_weld_cost_entry = ttk.Entry(gb_frame, width=10)
-        self.gb_weld_cost_entry.insert(0, "800000000")
-        self.gb_weld_cost_entry.grid(row=2, column=3, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ جوش و مونتاژ (ریال/کیلو):").grid(row=2, column=2, sticky="w", pady=4)
+        self.gb_weld_rate_entry = ttk.Entry(gb_frame, width=10)
+        self.gb_weld_rate_entry.insert(0, "177500")
+        self.gb_weld_rate_entry.grid(row=2, column=3, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="رنگ‌آمیزی:").grid(row=2, column=4, sticky="w", pady=4)
-        self.gb_paint_cost_entry = ttk.Entry(gb_frame, width=10)
-        self.gb_paint_cost_entry.insert(0, "30000000")
-        self.gb_paint_cost_entry.grid(row=2, column=5, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ رنگ‌آمیزی (ریال/کیلو):").grid(row=2, column=4, sticky="w", pady=4)
+        self.gb_paint_rate_entry = ttk.Entry(gb_frame, width=12)
+        self.gb_paint_rate_entry.insert(0, "6600")
+        self.gb_paint_rate_entry.grid(row=2, column=5, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="بسته‌بندی:").grid(row=3, column=0, sticky="w", pady=4)
-        self.gb_pack_cost_entry = ttk.Entry(gb_frame, width=20)
-        self.gb_pack_cost_entry.insert(0, "40000000")
-        self.gb_pack_cost_entry.grid(row=3, column=1, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ بسته‌بندی (ریال/کیلو):").grid(row=3, column=0, sticky="w", pady=4)
+        self.gb_pack_rate_entry = ttk.Entry(gb_frame, width=20)
+        self.gb_pack_rate_entry.insert(0, "8800")
+        self.gb_pack_rate_entry.grid(row=3, column=1, padx=5, pady=4)
 
-        ttk.Label(gb_frame, text="ارسال و حمل:").grid(row=3, column=2, sticky="w", pady=4)
-        self.gb_ship_cost_entry = ttk.Entry(gb_frame, width=10)
-        self.gb_ship_cost_entry.insert(0, "90000000")
-        self.gb_ship_cost_entry.grid(row=3, column=3, padx=5, pady=4)
+        ttk.Label(gb_frame, text="نرخ ارسال و حمل (ریال/کیلو):").grid(row=3, column=2, sticky="w", pady=4)
+        self.gb_ship_rate_entry = ttk.Entry(gb_frame, width=10)
+        self.gb_ship_rate_entry.insert(0, "20000")
+        self.gb_ship_rate_entry.grid(row=3, column=3, padx=5, pady=4)
 
-        btn_calc_gb = ttk.Button(gb_frame, text="🧮 محاسبه آنالیز قیمت گیربکس", command=self.calculate_gearbox)
+        btn_calc_gb = ttk.Button(gb_frame, text="🧮 ضرب در وزن کل و محاسبه آنالیز", command=self.calculate_gearbox)
         btn_calc_gb.grid(row=3, column=4, columnspan=2, sticky="ew", padx=5, pady=4)
 
-        res_frame = ttk.LabelFrame(self.tab_gearbox, text=" نتایج محاسباتی گیربکس ", padding="15")
+        res_frame = ttk.LabelFrame(self.tab_gearbox, text=" نتایج آنالیز تجمیعی بر اساس تغییر وزن ", padding="15")
         res_frame.pack(fill="x", pady=10)
 
         self.gb_res_total_weight = tk.Label(res_frame, text="وزن کل قطعات: ۰ کیلوگرم", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
@@ -346,7 +347,7 @@ class TookaTarhCostApp:
         self.gb_res_final_set = tk.Label(res_frame, text="قیمت کل پروژه با ۳۰٪ سود: ۰ ریال", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#16a085")
         self.gb_res_final_set.grid(row=1, column=0, padx=20, pady=5, sticky="w")
 
-        self.gb_res_per_kg = tk.Label(res_frame, text="قیمت هر کیلوگرم گیربکس: ۰ ریال", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#2980b9")
+        self.gb_res_per_kg = tk.Label(res_frame, text="هزینه تمام شده هر کیلوگرم: ۰ ریال/کیلوگرم", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#2980b9")
         self.gb_res_per_kg.grid(row=1, column=1, padx=20, pady=5, sticky="w")
 
     def calculate_gearbox(self):
@@ -355,14 +356,15 @@ class TookaTarhCostApp:
             unit_w = float(self.gb_unit_w_entry.get())
             total_w = qty * unit_w
 
-            mat_c = float(self.gb_mat_cost_entry.get())
-            turn_c = float(self.gb_turn_cost_entry.get())
-            heat_c = float(self.gb_heat_cost_entry.get())
-            std_c = float(self.gb_std_cost_entry.get())
-            weld_c = float(self.gb_weld_cost_entry.get())
-            paint_c = float(self.gb_paint_cost_entry.get())
-            pack_c = float(self.gb_pack_cost_entry.get())
-            ship_c = float(self.gb_ship_cost_entry.get())
+            # ضرب نرخ‌های کیلوگرمی در وزن کل قطعات
+            mat_c = float(self.gb_mat_rate_entry.get()) * total_w
+            turn_c = float(self.gb_turn_rate_entry.get()) * total_w
+            heat_c = float(self.gb_heat_rate_entry.get()) * total_w
+            std_c = float(self.gb_std_rate_entry.get()) * total_w
+            weld_c = float(self.gb_weld_rate_entry.get()) * total_w
+            paint_c = float(self.gb_paint_rate_entry.get()) * total_w
+            pack_c = float(self.gb_pack_rate_entry.get()) * total_w
+            ship_c = float(self.gb_ship_rate_entry.get()) * total_w
 
             total_make = mat_c + turn_c + heat_c + std_c + weld_c + paint_c + pack_c + ship_c
             final_with_profit = total_make * 1.30
@@ -371,7 +373,7 @@ class TookaTarhCostApp:
             self.gb_res_total_weight.config(text=f"وزن کل قطعات: {total_w:,.1f} کیلوگرم")
             self.gb_res_make_cost.config(text=f"قیمت ساخت کل: {total_make:,.0f} ریال")
             self.gb_res_final_set.config(text=f"قیمت کل پروژه با ۳۰٪ سود: {final_with_profit:,.0f} ریال")
-            self.gb_res_per_kg.config(text=f"قیمت هر کیلوگرم گیربکس: {price_per_kg:,.0f} ریال/کیلوگرم")
+            self.gb_res_per_kg.config(text=f"هزینه تمام شده هر کیلوگرم: {price_per_kg:,.0f} ریال/کیلوگرم")
 
         except Exception as e:
             messagebox.showerror("خطا", f"لطفاً ورودی‌های گیربکس را بررسی کنید:\n{e}")
