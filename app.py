@@ -260,10 +260,10 @@ class TookaTarhCostApp:
             messagebox.showinfo("موفقیت", "فایل اکسل قطعات ذخیره شد.")
 
     # =========================================================
-    # TAB 2: آنالیز گیربکس (بر اساس دقیقاً فرمول‌های فایل نمومه.xlsx)
+    # TAB 2: آنالیز قیمت گیربکس (فرمول‌نویسی دقیق فایل نمومه.xlsx)
     # =========================================================
     def build_gearbox_tab(self):
-        gb_frame = ttk.LabelFrame(self.tab_gearbox, text=" ورودی‌های قیمت گیربکس (مطابق فایل نمونه) ", padding="15")
+        gb_frame = ttk.LabelFrame(self.tab_gearbox, text=" ورودی‌های آنالیز قیمت گیربکس ", padding="15")
         gb_frame.pack(fill="x", pady=5)
 
         ttk.Label(gb_frame, text="وزن کل (kg):").grid(row=0, column=0, sticky="w", pady=6)
@@ -281,7 +281,7 @@ class TookaTarhCostApp:
         self.gb_make_cost_entry.insert(0, "1000000000")
         self.gb_make_cost_entry.grid(row=1, column=1, padx=8, pady=6)
 
-        ttk.Label(gb_frame, text="قیمت استاندارد (ریال):").grid(row=1, column=2, sticky="w", pady=6)
+        ttk.Label(gb_frame, text="قیمت قطعات استاندارد (ریال):").grid(row=1, column=2, sticky="w", pady=6)
         self.gb_std_cost_entry = ttk.Entry(gb_frame, width=20)
         self.gb_std_cost_entry.insert(0, "500000000")
         self.gb_std_cost_entry.grid(row=1, column=3, padx=8, pady=6)
@@ -304,20 +304,20 @@ class TookaTarhCostApp:
         btn_calc_gb = ttk.Button(gb_frame, text="🧮 محاسبه آنالیز قیمت گیربکس", command=self.calculate_sample_gearbox)
         btn_calc_gb.grid(row=3, column=2, columnspan=2, sticky="ew", padx=8, pady=6)
 
-        # Output Summary
-        res_frame = ttk.LabelFrame(self.tab_gearbox, text=" خروجی محاسبات (دقیقاً مطابق اکسل نمونه) ", padding="15")
+        # Output Summary Card
+        res_frame = ttk.LabelFrame(self.tab_gearbox, text=" نتایج محاسباتی دقیق (طابق فایل نمونه) ", padding="15")
         res_frame.pack(fill="x", pady=10)
 
-        self.gb_res_mat_total = tk.Label(res_frame, text="قیمت متریال کل: ۰ ریال", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
+        self.gb_res_mat_total = tk.Label(res_frame, text="قیمت متریال کل (وزن × قیمت کیلوگرم): ۰ ریال", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
         self.gb_res_mat_total.grid(row=0, column=0, padx=20, pady=6, sticky="w")
 
-        self.gb_res_total_cost = tk.Label(res_frame, text="قیمت کل (بدون سود): ۰ ریال", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
+        self.gb_res_total_cost = tk.Label(res_frame, text="قیمت کل بدون سود: ۰ ریال", font=("Tahoma", 10, "bold"), bg="#ffffff", fg="#2c3e50")
         self.gb_res_total_cost.grid(row=0, column=1, padx=20, pady=6, sticky="w")
 
         self.gb_res_final_profit = tk.Label(res_frame, text="قیمت کل + سود (۳۰٪): ۰ ریال", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#16a085")
         self.gb_res_final_profit.grid(row=1, column=0, padx=20, pady=6, sticky="w")
 
-        self.gb_res_per_kg = tk.Label(res_frame, text="قیمت هر کیلوگرم: ۰ ریال/کیلوگرم", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#2980b9")
+        self.gb_res_per_kg = tk.Label(res_frame, text="قیمت تمام‌شده هر کیلوگرم: ۰ ریال/کیلوگرم", font=("Tahoma", 11, "bold"), bg="#ffffff", fg="#2980b9")
         self.gb_res_per_kg.grid(row=1, column=1, padx=20, pady=6, sticky="w")
 
         ttk.Button(self.tab_gearbox, text="📥 دریافت خروجی اکسل گیربکس (.xlsx)", command=self.export_sample_gb_excel).pack(anchor="e", pady=5)
@@ -327,7 +327,7 @@ class TookaTarhCostApp:
             w = float(self.gb_weight_entry.get())
             mat_per_kg = float(self.gb_mat_per_kg_entry.get())
             
-            # متریال کل = وزن * قیمت متریال هر کیلوگرم
+            # 1. قیمت متریال کل = وزن * قیمت متریال هر کیلوگرم
             mat_total = w * mat_per_kg
             
             make_cost = float(self.gb_make_cost_entry.get())
@@ -336,19 +336,19 @@ class TookaTarhCostApp:
             pack_cost = float(self.gb_pack_cost_entry.get())
             ship_cost = float(self.gb_ship_cost_entry.get())
 
-            # قیمت کل = متریال کل + بقیه هزینه‌ها
+            # 2. قیمت کل = متریال کل + هزینه‌های ثابت خدمات
             total_cost = mat_total + make_cost + std_cost + assy_cost + pack_cost + ship_cost
             
-            # قیمت کل + سود (۳۰٪)
+            # 3. قیمت کل + سود ۳۰ درصد
             total_with_profit = total_cost * 1.30
             
-            # قیمت هر کیلوگرم = (قیمت کل + سود) / وزن کل
+            # 4. قیمت هر کیلوگرم = (قیمت کل + سود) / وزن کل
             price_per_kg = total_with_profit / w if w > 0 else 0
 
             self.gb_res_mat_total.config(text=f"قیمت متریال کل: {mat_total:,.0f} ریال")
-            self.gb_res_total_cost.config(text=f"قیمت کل (بدون سود): {total_cost:,.0f} ریال")
+            self.gb_res_total_cost.config(text=f"قیمت کل بدون سود: {total_cost:,.0f} ریال")
             self.gb_res_final_profit.config(text=f"قیمت کل + سود (۳۰٪): {total_with_profit:,.0f} ریال")
-            self.gb_res_per_kg.config(text=f"قیمت هر کیلوگرم: {price_per_kg:,.0f} ریال/کیلوگرم")
+            self.gb_res_per_kg.config(text=f"قیمت تمام‌شده هر کیلوگرم: {price_per_kg:,.0f} ریال/کیلوگرم")
 
             self.last_gb_data = {
                 "w": w, "mat_per_kg": mat_per_kg, "mat_total": mat_total,
